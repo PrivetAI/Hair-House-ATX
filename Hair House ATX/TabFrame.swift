@@ -13,7 +13,8 @@ struct TabFrame: View {
                 case 0: HomeView(openMenu: { tab = 1 })
                 case 1: ServicesView()
                 case 2: VisitsView()
-                default: StudioView()
+                case 3: StudioView()
+                default: ReviewsView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -43,10 +44,11 @@ struct TabFrame: View {
         VStack(spacing: 0) {
             Hairline()
             HStack(spacing: 0) {
-                button(index: 0, label: "Home") { DoorMark(size: 22, color: tint(0)) }
-                button(index: 1, label: "Services") { StrandMark(size: 22, color: tint(1)) }
-                button(index: 2, label: "Visits") { TicketMark(size: 22, color: tint(2)) }
-                button(index: 3, label: "Studio") { MirrorMark(size: 22, color: tint(3)) }
+                button(index: 0, label: "Home") { DoorMark(size: 21, color: tint(0)) }
+                button(index: 1, label: "Services") { StrandMark(size: 21, color: tint(1)) }
+                button(index: 2, label: "Visits") { TicketMark(size: 21, color: tint(2)) }
+                button(index: 3, label: "Studio") { MirrorMark(size: 21, color: tint(3)) }
+                button(index: 4, label: "Reviews") { RosetteMark(size: 21, color: tint(4)) }
             }
             .padding(.top, 9)
             .padding(.bottom, 3)
@@ -63,11 +65,17 @@ struct TabFrame: View {
         Button(action: { tab = index }) {
             VStack(spacing: 5) {
                 mark()
+                // Five monospaced labels across a 320pt screen leaves "Services" about 60pt
+                // to sit in. The tracking comes down and the label is allowed to shrink
+                // rather than wrap or clip — one line each, whatever the phone.
                 Text(label)
                     .font(Tone.figure(10, .semibold))
-                    .tracking(0.7)
+                    .tracking(0.4)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
                     .foregroundColor(tint(index))
             }
+            .padding(.horizontal, 2)
             .frame(maxWidth: .infinity)
             .contentShape(Rectangle())
         }

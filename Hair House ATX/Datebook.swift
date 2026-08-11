@@ -59,6 +59,37 @@ struct Appointment: Identifiable, Codable, Equatable {
     }
 }
 
+/// What the guest thought of a visit that has already happened. Kept beside the appointments
+/// on the same phone and shown to nobody: the studio's public reviews live on its Google
+/// listing, and nothing written here goes anywhere near them.
+struct Rating: Identifiable, Codable, Equatable {
+    let appointmentId: UUID
+    var stars: Int
+    var note: String
+    var ratedOn: Date
+
+    /// One rating per visit, so the appointment it belongs to is the identity.
+    var id: UUID { appointmentId }
+
+    init(appointmentId: UUID, stars: Int, note: String, ratedOn: Date = Date()) {
+        self.appointmentId = appointmentId
+        self.stars = stars
+        self.note = note
+        self.ratedOn = ratedOn
+    }
+
+    /// Field by field with a default for each, for the same reason the appointments are: a
+    /// synthesised decoder throws the moment a property is added later, and the throw would
+    /// take every rating the guest has left with it.
+    init(from decoder: Decoder) throws {
+        let box = try decoder.container(keyedBy: CodingKeys.self)
+        appointmentId = try box.decodeIfPresent(UUID.self, forKey: .appointmentId) ?? UUID()
+        stars = try box.decodeIfPresent(Int.self, forKey: .stars) ?? 0
+        note = try box.decodeIfPresent(String.self, forKey: .note) ?? ""
+        ratedOn = try box.decodeIfPresent(Date.self, forKey: .ratedOn) ?? Date()
+    }
+}
+
 /// The studio's own bookings — the ones that were already in the book before the guest
 /// opened the app. Generated rather than stored, but generated the same way every launch.
 enum Occupancy {
@@ -134,13 +165,19 @@ enum Occupancy {
 
 final class Datebook: ObservableObject {
     @Published private(set) var appointments: [Appointment] = []
+    @Published private(set) var ratings: [Rating] = []
 
     private let storageKey = "hairhouse.appointments.v1"
+    private let ratingsKey = "hairhouse.ratings.v1"
 
     init() {
         if let raw = UserDefaults.standard.data(forKey: storageKey),
            let decoded = try? JSONDecoder().decode([Appointment].self, from: raw) {
             appointments = decoded
+        }
+        if let raw = UserDefaults.standard.data(forKey: ratingsKey),
+           let decoded = try? JSONDecoder().decode([Rating].self, from: raw) {
+            ratings = decoded
         }
     }
 
@@ -253,7 +290,11 @@ final class Datebook: ObservableObject {
 
     func cancel(_ appointment: Appointment) {
         appointments.removeAll { $0.id == appointment.id }
+        // A rating with no visit behind it would count towards the guest's own average for
+        // ever without appearing in any list.
+        ratings.removeAll { $0.appointmentId == appointment.id }
         persist()
+        persistRatings()
     }
 
     var upcoming: [Appointment] {
@@ -269,6 +310,64 @@ final class Datebook: ObservableObject {
     private func persist() {
         if let raw = try? JSONEncoder().encode(appointments) {
             UserDefaults.standard.set(raw, forKey: storageKey)
+        }
+    }
+
+    // MARK: What the guest made of it
+
+    func rating(for appointment: Appointment) -> Rating? {
+        ratings.first { $0.appointmentId == appointment.id }
+    }
+
+    /// One rating per visit, replaced rather than added to — going back to change your mind
+    /// about a visit should not leave two opinions of it in the average.
+    func rate(_ appointment: Appointment, stars: Int, note: String) {
+        let kept = Rating(appointmentId: appointment.id,
+                          stars: min(5, max(1, stars)),
+                          note: note.trimmingCharacters(in: .whitespacesAndNewlines))
+        ratings.removeAll { $0.appointmentId == appointment.id }
+        ratings.append(kept)
+        persistRatings()
+    }
+
+    /// Visits that have happened and have nothing said about them yet, newest first.
+    var unrated: [Appointment] { past.filter { rating(for: $0) == nil } }
+
+    /// The rated ones, paired with what was said. Built from `past` rather than from the
+    /// ratings, so a rating whose appointment has gone simply never appears.
+    var rated: [(visit: Appointment, rating: Rating)] {
+        past.compactMap { visit in rating(for: visit).map { (visit: visit, rating: $0) } }
+    }
+
+    /// The guest's own average, or nil until they have rated something. An average of
+    /// nothing is not nought stars, and the divisor would be zero.
+    var ownAverage: Double? {
+        let scores = rated.map { Double($0.rating.stars) }
+        guard !scores.isEmpty else { return nil }
+        return scores.reduce(0, +) / Double(scores.count)
+    }
+
+    // MARK: The history, totalled
+
+    /// What the visits behind them cost, added up. Services that are no longer on the menu
+    /// contribute nothing rather than crashing the sum.
+    var totalSpentCents: Int {
+        past.compactMap { $0.service?.priceCents }.reduce(0, +)
+    }
+
+    /// Mean days from one visit to the next, rounded. Nil below two visits: there is no gap
+    /// between a single visit and nothing, and `count - 1` would be a division by zero.
+    var averageGapDays: Int? {
+        let calendar = Calendar.current
+        let days = past.map { calendar.startOfDay(for: $0.start) }.sorted()
+        guard days.count > 1, let first = days.first, let last = days.last else { return nil }
+        let span = calendar.dateComponents([.day], from: first, to: last).day ?? 0
+        return max(0, Int((Double(span) / Double(days.count - 1)).rounded()))
+    }
+
+    private func persistRatings() {
+        if let raw = try? JSONEncoder().encode(ratings) {
+            UserDefaults.standard.set(raw, forKey: ratingsKey)
         }
     }
 }

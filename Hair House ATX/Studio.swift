@@ -61,6 +61,15 @@ enum Studio {
     static let phone = "(737) 296-3420"
     static let established = "Since 2020"
 
+    /// The door, in coordinates. Only ever used to drop one pin and to hand Apple Maps a
+    /// point to walk to — the app never asks the phone where the guest is.
+    static let latitude = 30.2725425
+    static let longitude = -97.7494678
+
+    /// The same number the studio prints, with the punctuation taken out so a dialler can
+    /// take it. Read off `phone` rather than typed again, so the two cannot drift apart.
+    static var phoneDigits: String { phone.filter { $0.isNumber } }
+
     /// The word the studio uses for the person doing the work. Every screen reads it from
     /// here rather than spelling it out, so the copy stays in one voice.
     static let staffNoun = "stylist"
@@ -187,6 +196,20 @@ enum Studio {
 
     static func money(_ cents: Int) -> String {
         cents % 100 == 0 ? "$\(cents / 100)" : String(format: "$%.2f", Double(cents) / 100)
+    }
+
+    /// A run of visits at these prices passes a thousand dollars quickly, and "$1240" is not
+    /// a figure anybody reads at a glance. Single prices stay with `money` — none of them is
+    /// long enough to need grouping — and only the totals come through here.
+    static func moneyTotal(_ cents: Int) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = ","
+        formatter.usesGroupingSeparator = true
+        formatter.minimumFractionDigits = cents % 100 == 0 ? 0 : 2
+        formatter.maximumFractionDigits = cents % 100 == 0 ? 0 : 2
+        let amount = NSNumber(value: Double(cents) / 100)
+        return "$" + (formatter.string(from: amount) ?? "\(cents / 100)")
     }
 
     static func duration(_ minutes: Int) -> String {

@@ -1,9 +1,26 @@
 import SwiftUI
+import MapKit
+
+/// The one pin on the studio's map. MapKit wants an Identifiable item even where there is
+/// only ever going to be one of them.
+struct StudioPin: Identifiable {
+    let id = "studio"
+    let coordinate: CLLocationCoordinate2D
+
+    static let here = StudioPin(coordinate: CLLocationCoordinate2D(latitude: Studio.latitude,
+                                                                  longitude: Studio.longitude))
+}
 
 /// The studio itself: the week, the address, the rating and the two chairs.
 struct StudioView: View {
     @State private var now = Date()
     @State private var readingPolicy = false
+
+    /// Tight enough that the block of West Avenue is readable, wide enough that the cross
+    /// streets are still named.
+    @State private var region = MKCoordinateRegion(
+        center: StudioPin.here.coordinate,
+        span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
 
     private let tick = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
@@ -106,7 +123,37 @@ struct StudioView: View {
             Text(Studio.phone)
                 .font(Tone.figure(15))
                 .foregroundColor(Tone.accent)
+
+            map
+
+            // Both hand off to an app that does the job properly. Trying to draw a route or
+            // dial inside a booking app would be a worse version of two things the phone
+            // already has.
+            HStack(spacing: 10) {
+                OutlineButton(title: "Directions") { LinkOut.open(LinkOut.directions) }
+                OutlineButton(title: "Call") { LinkOut.open(LinkOut.call) }
+            }
         }
+    }
+
+    /// A still picture of one address rather than a map to explore: no panning, no zoom, no
+    /// taps at all. The studio does not move, and nothing here asks the phone where the guest
+    /// is — there is no user location on it, so the app needs no location permission.
+    private var map: some View {
+        Map(coordinateRegion: $region,
+            interactionModes: [],
+            annotationItems: [StudioPin.here]) { pin in
+                MapAnnotation(coordinate: pin.coordinate) { PinMark() }
+            }
+            .frame(height: 170)
+            .overlay(
+                RoundedRectangle(cornerRadius: Span.corner)
+                    .stroke(Tone.rule, lineWidth: Span.rule)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: Span.corner))
+            .allowsHitTesting(false)
+            .accessibilityElement()
+            .accessibilityLabel("Map showing \(Studio.name) at \(Studio.addressLine)")
     }
 
     private var roster: some View {

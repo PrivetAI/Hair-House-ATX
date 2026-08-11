@@ -187,6 +187,72 @@ struct MirrorMark: View {
     }
 }
 
+/// A rosette: a star sitting in a ring with two ribbon tails. The reviews tab. A bare star
+/// would collide with the little ones used in the rating rows — the ring and the tails make
+/// it an object at 22pt rather than a very large version of the same thing.
+struct RosetteMark: View {
+    var size: CGFloat = 24
+    var color: Color = Tone.accent
+
+    var body: some View {
+        Canvas { context, canvas in
+            let unit = min(canvas.width, canvas.height)
+            let line = max(1.4, unit * 0.075)
+            let centre = CGPoint(x: unit * 0.5, y: unit * 0.42)
+
+            context.stroke(Path(ellipseIn: CGRect(x: centre.x - unit * 0.32,
+                                                  y: centre.y - unit * 0.32,
+                                                  width: unit * 0.64, height: unit * 0.64)),
+                           with: .color(color), lineWidth: line)
+
+            var star = Path()
+            for step in 0..<10 {
+                let radius = unit * (step % 2 == 0 ? 0.19 : 0.08)
+                let angle = -Double.pi / 2 + Double(step) * Double.pi / 5
+                let point = CGPoint(x: centre.x + CGFloat(cos(angle)) * radius,
+                                    y: centre.y + CGFloat(sin(angle)) * radius)
+                if step == 0 { star.move(to: point) } else { star.addLine(to: point) }
+            }
+            star.closeSubpath()
+            context.fill(star, with: .color(color))
+
+            // The two tails. Without them the mark is a coin; with them it is an award.
+            var tails = Path()
+            tails.move(to: CGPoint(x: unit * 0.38, y: unit * 0.7))
+            tails.addLine(to: CGPoint(x: unit * 0.33, y: unit * 0.88))
+            tails.move(to: CGPoint(x: unit * 0.62, y: unit * 0.7))
+            tails.addLine(to: CGPoint(x: unit * 0.67, y: unit * 0.88))
+            context.stroke(tails, with: .color(color),
+                           style: StrokeStyle(lineWidth: line * 0.85, lineCap: .round))
+        }
+        .frame(width: size, height: size)
+    }
+}
+
+/// The pin dropped on the studio's own map. The mark off the splash screen — an evergreen
+/// ring around a solid centre — rather than a balloon lifted from MapKit, so the one thing
+/// drawn on the map still belongs to this app.
+struct PinMark: View {
+    var size: CGFloat = 26
+
+    var body: some View {
+        Canvas { context, canvas in
+            let unit = min(canvas.width, canvas.height)
+            // A white disc under the ring: the map underneath is busy, and the mark has to
+            // hold its shape over a road as well as over a block of park.
+            context.fill(Path(ellipseIn: CGRect(x: 0, y: 0, width: unit, height: unit)),
+                         with: .color(Tone.cardLifted))
+            context.stroke(Path(ellipseIn: CGRect(x: unit * 0.09, y: unit * 0.09,
+                                                  width: unit * 0.82, height: unit * 0.82)),
+                           with: .color(Tone.accent), lineWidth: max(1.6, unit * 0.09))
+            context.fill(Path(ellipseIn: CGRect(x: unit * 0.33, y: unit * 0.33,
+                                                width: unit * 0.34, height: unit * 0.34)),
+                         with: .color(Tone.accent))
+        }
+        .frame(width: size, height: size)
+    }
+}
+
 /// A small cross, drawn rather than lifted from the system set.
 struct CloseMark: View {
     var size: CGFloat = 16

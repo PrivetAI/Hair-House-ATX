@@ -20,8 +20,17 @@ struct BookSheet: View {
     @State private var confirmed: Slot?
     @State private var settled = false
 
-    init(service: Service) {
+    /// `preferredStylistId` is only ever set by "Book this again": the same service with the
+    /// chair that did it last time already chosen. It is checked against the service's own
+    /// roster here rather than trusted, so a chair that no longer takes the work quietly
+    /// falls back to anyone free instead of filtering the day book down to nothing.
+    init(service: Service, preferredStylistId: String? = nil) {
         self.service = service
+
+        let allowed = service.stylistIds.isEmpty ? Studio.stylists.map { $0.id } : service.stylistIds
+        _stylistId = State(initialValue: preferredStylistId.flatMap {
+            allowed.contains($0) ? $0 : nil
+        })
 
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())

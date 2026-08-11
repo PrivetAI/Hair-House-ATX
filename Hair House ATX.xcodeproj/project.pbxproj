@@ -16,6 +16,8 @@
 		684E432DB3089310E84FE09A /* HairHouseWebPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5D4E2071E03C8970365099 /* HairHouseWebPanel.swift */; };
 		7B10B544EF4150EFD51FC007 /* Datebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B8C263AC8512701B06CB17 /* Datebook.swift */; };
 		923E0099215A8DB951845B47 /* ServicesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1A54E5994BF80AE7488C4F /* ServicesView.swift */; };
+		99EFA01EBD19AA8AA21C9882 /* ReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1F8B8045CB45BDC9DB44E9 /* ReviewsView.swift */; };
+		A064E783AF5625CC6215DCE6 /* LinkOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F155B97F31906A527B5BE /* LinkOut.swift */; };
 		E14471188FC77165282D130F /* BookSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62665937538D03379D0BB6A7 /* BookSheet.swift */; };
 		E1E69DB891E592CF75EBB44B /* Studio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4514D8F9CB72C1DC35571A59 /* Studio.swift */; };
 		F77A1A8FF1D0593602637E4B /* HairHouseSplash.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E3A35AC2F67B1840D0FAB5 /* HairHouseSplash.swift */; };
@@ -26,6 +28,7 @@
 		1725837DA07AC237796D5A17 /* HairHouseATXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HairHouseATXApp.swift; sourceTree = "<group>"; };
 		1846A70000D46083AD12DCA8 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		2501F82A92D63BEEFF0A4D92 /* StudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioView.swift; sourceTree = "<group>"; };
+		2E5F155B97F31906A527B5BE /* LinkOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkOut.swift; sourceTree = "<group>"; };
 		31BD4299209E3C0FC9C74E33 /* TabFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabFrame.swift; sourceTree = "<group>"; };
 		385AF5767DF36B5506BBA126 /* VisitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitsView.swift; sourceTree = "<group>"; };
 		4514D8F9CB72C1DC35571A59 /* Studio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Studio.swift; sourceTree = "<group>"; };
@@ -37,6 +40,7 @@
 		7966E85F8F18941EBBCE2088 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AC5D4E2071E03C8970365099 /* HairHouseWebPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HairHouseWebPanel.swift; sourceTree = "<group>"; };
 		B5E3A35AC2F67B1840D0FAB5 /* HairHouseSplash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HairHouseSplash.swift; sourceTree = "<group>"; };
+		FB1F8B8045CB45BDC9DB44E9 /* ReviewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -66,7 +70,9 @@
 				B5E3A35AC2F67B1840D0FAB5 /* HairHouseSplash.swift */,
 				AC5D4E2071E03C8970365099 /* HairHouseWebPanel.swift */,
 				71506C98229FB9845CB83A08 /* HomeView.swift */,
+				2E5F155B97F31906A527B5BE /* LinkOut.swift */,
 				1846A70000D46083AD12DCA8 /* Palette.swift */,
+				FB1F8B8045CB45BDC9DB44E9 /* ReviewsView.swift */,
 				5F1A54E5994BF80AE7488C4F /* ServicesView.swift */,
 				4514D8F9CB72C1DC35571A59 /* Studio.swift */,
 				2501F82A92D63BEEFF0A4D92 /* StudioView.swift */,
@@ -152,7 +158,9 @@
 				F77A1A8FF1D0593602637E4B /* HairHouseSplash.swift in Sources */,
 				684E432DB3089310E84FE09A /* HairHouseWebPanel.swift in Sources */,
 				FCF26DE77BBCC2EE450946EB /* HomeView.swift in Sources */,
+				A064E783AF5625CC6215DCE6 /* LinkOut.swift in Sources */,
 				24FC22C5DA68C788C7602EAC /* Palette.swift in Sources */,
+				99EFA01EBD19AA8AA21C9882 /* ReviewsView.swift in Sources */,
 				923E0099215A8DB951845B47 /* ServicesView.swift in Sources */,
 				E1E69DB891E592CF75EBB44B /* Studio.swift in Sources */,
 				5486746A709CA2B10003DBD1 /* StudioView.swift in Sources */,
