@@ -1,0 +1,370 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		24FC22C5DA68C788C7602EAC /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1846A70000D46083AD12DCA8 /* Palette.swift */; };
+		324961DE1D92FE47C7027AAA /* TabFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BD4299209E3C0FC9C74E33 /* TabFrame.swift */; };
+		40D82BAA9E401853F8205367 /* VisitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385AF5767DF36B5506BBA126 /* VisitsView.swift */; };
+		46388CEBB4F99019D1FCD65C /* HairHouseATXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1725837DA07AC237796D5A17 /* HairHouseATXApp.swift */; };
+		533E66BFED6BA9C36AEEA992 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7966E85F8F18941EBBCE2088 /* Assets.xcassets */; };
+		5486746A709CA2B10003DBD1 /* StudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2501F82A92D63BEEFF0A4D92 /* StudioView.swift */; };
+		684E432DB3089310E84FE09A /* HairHouseWebPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5D4E2071E03C8970365099 /* HairHouseWebPanel.swift */; };
+		7B10B544EF4150EFD51FC007 /* Datebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B8C263AC8512701B06CB17 /* Datebook.swift */; };
+		923E0099215A8DB951845B47 /* ServicesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1A54E5994BF80AE7488C4F /* ServicesView.swift */; };
+		E14471188FC77165282D130F /* BookSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62665937538D03379D0BB6A7 /* BookSheet.swift */; };
+		E1E69DB891E592CF75EBB44B /* Studio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4514D8F9CB72C1DC35571A59 /* Studio.swift */; };
+		F77A1A8FF1D0593602637E4B /* HairHouseSplash.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E3A35AC2F67B1840D0FAB5 /* HairHouseSplash.swift */; };
+		FCF26DE77BBCC2EE450946EB /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71506C98229FB9845CB83A08 /* HomeView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1725837DA07AC237796D5A17 /* HairHouseATXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HairHouseATXApp.swift; sourceTree = "<group>"; };
+		1846A70000D46083AD12DCA8 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
+		2501F82A92D63BEEFF0A4D92 /* StudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioView.swift; sourceTree = "<group>"; };
+		31BD4299209E3C0FC9C74E33 /* TabFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabFrame.swift; sourceTree = "<group>"; };
+		385AF5767DF36B5506BBA126 /* VisitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitsView.swift; sourceTree = "<group>"; };
+		4514D8F9CB72C1DC35571A59 /* Studio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Studio.swift; sourceTree = "<group>"; };
+		4682E68DFCFA44027BC65CC5 /* Hair House ATX.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Hair House ATX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		47B8C263AC8512701B06CB17 /* Datebook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Datebook.swift; sourceTree = "<group>"; };
+		5F1A54E5994BF80AE7488C4F /* ServicesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesView.swift; sourceTree = "<group>"; };
+		62665937538D03379D0BB6A7 /* BookSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSheet.swift; sourceTree = "<group>"; };
+		71506C98229FB9845CB83A08 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		7966E85F8F18941EBBCE2088 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AC5D4E2071E03C8970365099 /* HairHouseWebPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HairHouseWebPanel.swift; sourceTree = "<group>"; };
+		B5E3A35AC2F67B1840D0FAB5 /* HairHouseSplash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HairHouseSplash.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		599ED503A705F76EB2199C01 = {
+			isa = PBXGroup;
+			children = (
+				F066F4952CE7D80E5C352B7B /* Hair House ATX */,
+				C0AC9B5B166B5F5C29F4E5CE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C0AC9B5B166B5F5C29F4E5CE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4682E68DFCFA44027BC65CC5 /* Hair House ATX.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F066F4952CE7D80E5C352B7B /* Hair House ATX */ = {
+			isa = PBXGroup;
+			children = (
+				7966E85F8F18941EBBCE2088 /* Assets.xcassets */,
+				62665937538D03379D0BB6A7 /* BookSheet.swift */,
+				47B8C263AC8512701B06CB17 /* Datebook.swift */,
+				1725837DA07AC237796D5A17 /* HairHouseATXApp.swift */,
+				B5E3A35AC2F67B1840D0FAB5 /* HairHouseSplash.swift */,
+				AC5D4E2071E03C8970365099 /* HairHouseWebPanel.swift */,
+				71506C98229FB9845CB83A08 /* HomeView.swift */,
+				1846A70000D46083AD12DCA8 /* Palette.swift */,
+				5F1A54E5994BF80AE7488C4F /* ServicesView.swift */,
+				4514D8F9CB72C1DC35571A59 /* Studio.swift */,
+				2501F82A92D63BEEFF0A4D92 /* StudioView.swift */,
+				31BD4299209E3C0FC9C74E33 /* TabFrame.swift */,
+				385AF5767DF36B5506BBA126 /* VisitsView.swift */,
+			);
+			path = "Hair House ATX";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A01342160D19C9BE3D4BF3CD /* Hair House ATX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BB65D40A8F7829EDD7826F62 /* Build configuration list for PBXNativeTarget "Hair House ATX" */;
+			buildPhases = (
+				F459B15BC6DCD82BDF7237E5 /* Sources */,
+				2874838D784C65367969D566 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Hair House ATX";
+			packageProductDependencies = (
+			);
+			productName = "Hair House ATX";
+			productReference = 4682E68DFCFA44027BC65CC5 /* Hair House ATX.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7531FF6DEC2273A3B28E0E61 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					A01342160D19C9BE3D4BF3CD = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = AF675335231C02CEB19445D3 /* Build configuration list for PBXProject "Hair House ATX" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 599ED503A705F76EB2199C01;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C0AC9B5B166B5F5C29F4E5CE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A01342160D19C9BE3D4BF3CD /* Hair House ATX */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2874838D784C65367969D566 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				533E66BFED6BA9C36AEEA992 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F459B15BC6DCD82BDF7237E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E14471188FC77165282D130F /* BookSheet.swift in Sources */,
+				7B10B544EF4150EFD51FC007 /* Datebook.swift in Sources */,
+				46388CEBB4F99019D1FCD65C /* HairHouseATXApp.swift in Sources */,
+				F77A1A8FF1D0593602637E4B /* HairHouseSplash.swift in Sources */,
+				684E432DB3089310E84FE09A /* HairHouseWebPanel.swift in Sources */,
+				FCF26DE77BBCC2EE450946EB /* HomeView.swift in Sources */,
+				24FC22C5DA68C788C7602EAC /* Palette.swift in Sources */,
+				923E0099215A8DB951845B47 /* ServicesView.swift in Sources */,
+				E1E69DB891E592CF75EBB44B /* Studio.swift in Sources */,
+				5486746A709CA2B10003DBD1 /* StudioView.swift in Sources */,
+				324961DE1D92FE47C7027AAA /* TabFrame.swift in Sources */,
+				40D82BAA9E401853F8205367 /* VisitsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6AE416201C5D9D7467984A4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		BB0B1FF5FDDB4C62F8FEA0E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hair House ATX";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hairhouseatx.app;
+				PRODUCT_NAME = "Hair House ATX";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		D59C644B25F1C4DDB8FC7DDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		FAACE0C656807A9DDBC65596 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hair House ATX";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hairhouseatx.app;
+				PRODUCT_NAME = "Hair House ATX";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AF675335231C02CEB19445D3 /* Build configuration list for PBXProject "Hair House ATX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D59C644B25F1C4DDB8FC7DDB /* Debug */,
+				6AE416201C5D9D7467984A4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BB65D40A8F7829EDD7826F62 /* Build configuration list for PBXNativeTarget "Hair House ATX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BB0B1FF5FDDB4C62F8FEA0E2 /* Debug */,
+				FAACE0C656807A9DDBC65596 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7531FF6DEC2273A3B28E0E61 /* Project object */;
+}

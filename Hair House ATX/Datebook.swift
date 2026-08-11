@@ -1,0 +1,359 @@
+import Foundation
+import Combine
+
+/// One possible start time in a day, and what is standing in its way.
+enum SlotState: Equatable {
+    case free
+    case taken
+    case gone   // Earlier today. The clock has already run past it.
+}
+
+struct Slot: Identifiable, Equatable {
+    let minutes: Int
+    let stylistId: String
+    let state: SlotState
+
+    var id: String { "\(minutes)-\(stylistId)" }
+    var isFree: Bool { state == .free }
+    var label: String { Studio.clock(minutes) }
+}
+
+/// An appointment the guest is holding. Kept on the device — this build stores the book on
+/// the phone and sends nothing anywhere.
+struct Appointment: Identifiable, Codable, Equatable {
+    let id: UUID
+    var serviceId: String
+    var stylistId: String
+    var day: Date
+    var minutes: Int
+
+    init(id: UUID = UUID(), serviceId: String, stylistId: String, day: Date, minutes: Int) {
+        self.id = id
+        self.serviceId = serviceId
+        self.stylistId = stylistId
+        self.day = day
+        self.minutes = minutes
+    }
+
+    /// Decoded field by field with a default for each. A synthesised decoder throws the
+    /// moment a property is added later, and a throw here would quietly wipe every
+    /// appointment somebody is holding.
+    init(from decoder: Decoder) throws {
+        let box = try decoder.container(keyedBy: CodingKeys.self)
+        id = try box.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        serviceId = try box.decodeIfPresent(String.self, forKey: .serviceId) ?? ""
+        stylistId = try box.decodeIfPresent(String.self, forKey: .stylistId) ?? ""
+        day = try box.decodeIfPresent(Date.self, forKey: .day) ?? Date()
+        minutes = try box.decodeIfPresent(Int.self, forKey: .minutes) ?? 0
+    }
+
+    var service: Service? { Studio.service(serviceId) }
+    var stylist: Stylist? { Studio.stylist(stylistId) }
+
+    /// The wall-clock moment, used to sort and to decide what is still ahead.
+    var start: Date {
+        Calendar.current.date(bySettingHour: minutes / 60,
+                              minute: minutes % 60,
+                              second: 0,
+                              of: day) ?? day
+    }
+}
+
+/// The studio's own bookings — the ones that were already in the book before the guest
+/// opened the app. Generated rather than stored, but generated the same way every launch.
+enum Occupancy {
+    /// The lattice the studio's own appointments sit on.
+    static let step = 15
+
+    /// FNV-1a. `String.hashValue` is seeded per process, so a book built on it would
+    /// reshuffle itself on every launch — the three o'clock that was gone this morning has
+    /// to still be gone this afternoon.
+    static func hash(_ text: String) -> UInt64 {
+        var value: UInt64 = 0xcbf29ce484222325
+        for byte in text.utf8 {
+            value ^= UInt64(byte)
+            value = value &* 0x100000001b3
+        }
+        return value
+    }
+
+    static func unit(_ text: String) -> Double {
+        Double(hash(text) % 10_000) / 10_000
+    }
+
+    /// How hard the whole studio is being pushed in this hour. Shared by both chairs on
+    /// purpose: a busy Thursday afternoon should be busy for everyone, not two unrelated
+    /// coin flips that leave one stylist mysteriously idle all day.
+    static func surge(dayKey: String, minute: Int) -> Double {
+        unit("surge|\(dayKey)|\(minute / 60)")
+    }
+
+    /// Computed once per day and chair, then kept. Every screen asks about availability
+    /// repeatedly — the services list alone wants fourteen days for eleven services — and
+    /// rebuilding the day each time is wasted work. Only ever touched from the main thread,
+    /// which is where SwiftUI reads it.
+    private static var bookCache: [String: [Range<Int>]] = [:]
+
+    /// The appointments already in the book for one chair on one day, as runs of minutes.
+    ///
+    /// Drawing each slot independently would give a shredded day — free, taken, free, taken
+    /// — that no real chair ever looks like, and would make a three-hour service impossible
+    /// rather than merely scarce. Walking the day and laying down whole appointments leaves
+    /// realistic gaps, which is what the long services have to fit into.
+    static func booked(dayKey: String, stylistId: String,
+                       opens: Int, closes: Int) -> [Range<Int>] {
+        let cacheKey = "\(dayKey)|\(stylistId)"
+        if let kept = bookCache[cacheKey] { return kept }
+
+        let dayPressure = unit("day|\(dayKey)")
+        // Weighted short: most of what a studio takes is a cut or a gloss, and a book made
+        // only of long sits leaves no gaps at all.
+        let lengths = [45, 45, 45, 60, 60, 90]
+
+        var runs: [Range<Int>] = []
+        var minute = opens
+        while minute < closes {
+            // Tuned against a headless sweep of the whole menu: the book lands around 45%
+            // full, which leaves a 45-minute cut a dozen or more starts a day and a
+            // three-hour balayage a handful across the whole fortnight.
+            let load = 0.05 + dayPressure * 0.09 + surge(dayKey: dayKey, minute: minute) * 0.14
+            if unit("book|\(dayKey)|\(stylistId)|\(minute)") < load {
+                let pick = Int(hash("run|\(dayKey)|\(stylistId)|\(minute)") % UInt64(lengths.count))
+                let length = min(lengths[pick], closes - minute)
+                runs.append(minute..<(minute + length))
+                minute += length
+            } else {
+                minute += step
+            }
+        }
+
+        bookCache[cacheKey] = runs
+        return runs
+    }
+}
+
+final class Datebook: ObservableObject {
+    @Published private(set) var appointments: [Appointment] = []
+
+    private let storageKey = "hairhouse.appointments.v1"
+
+    init() {
+        if let raw = UserDefaults.standard.data(forKey: storageKey),
+           let decoded = try? JSONDecoder().decode([Appointment].self, from: raw) {
+            appointments = decoded
+        }
+    }
+
+    // MARK: Availability
+
+    static func dayKey(_ day: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: day)
+    }
+
+    /// How finely the day is offered. A quarter-hour bang trim wants quarter-hour starts; a
+    /// three-hour balayage on the same lattice would be a wall of near-identical rows.
+    static func stride(for service: Service) -> Int {
+        service.minutes < 60 ? 15 : 30
+    }
+
+    /// The day laid out as start times for one service.
+    ///
+    /// The loop stops at `closes - service.minutes`, which is what makes the long services
+    /// visibly shorter columns: a 180-minute balayage cannot start after three o'clock on a
+    /// six o'clock day, so its column ends where a 45-minute cut's is still going. On top of
+    /// that a start only counts as free if the chair stays clear for the service's whole
+    /// run, which is what makes them sparse as well as short.
+    func slots(on day: Date, service: Service, stylistId: String?) -> [Slot] {
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: day)
+        let hours = Studio.hours(for: weekday)
+        guard let opens = hours.opensAt, let closes = hours.closesAt else { return [] }
+
+        let key = Datebook.dayKey(day)
+        let chairs = candidates(for: service, preferred: stylistId)
+        guard !chairs.isEmpty else { return [] }
+
+        let isToday = calendar.isDateInToday(day)
+        let nowMinutes = calendar.component(.hour, from: Date()) * 60
+            + calendar.component(.minute, from: Date())
+
+        var result: [Slot] = []
+        var minute = opens
+        let gap = Datebook.stride(for: service)
+
+        while minute + service.minutes <= closes {
+            let run = minute..<(minute + service.minutes)
+            let openChair = chairs.first { chair in
+                let taken = Occupancy.booked(dayKey: key, stylistId: chair,
+                                             opens: opens, closes: closes)
+                if taken.contains(where: { $0.overlaps(run) }) { return false }
+                return !isHeld(dayKey: key, run: run, stylistId: chair)
+            }
+
+            let state: SlotState
+            if isToday && minute <= nowMinutes {
+                state = .gone
+            } else {
+                state = openChair == nil ? .taken : .free
+            }
+
+            result.append(Slot(minutes: minute,
+                               stylistId: openChair ?? chairs[0],
+                               state: state))
+            minute += gap
+        }
+        return result
+    }
+
+    /// How many starts a given day can still offer. Drives the number under each day chip,
+    /// which is where the price-and-length spread becomes obvious: a bang trim shows a dozen,
+    /// a balayage shows nought or one.
+    func freeCount(on day: Date, service: Service, stylistId: String?) -> Int {
+        slots(on: day, service: service, stylistId: stylistId).filter { $0.isFree }.count
+    }
+
+    /// Which chairs take this service at all. A service tied to one stylist has exactly one,
+    /// and its book is genuinely thinner as a result.
+    func candidates(for service: Service, preferred: String?) -> [String] {
+        let allowed = service.stylistIds.isEmpty ? Studio.stylists.map { $0.id } : service.stylistIds
+        if let preferred, allowed.contains(preferred) { return [preferred] }
+        return allowed
+    }
+
+    /// The soonest free start inside the next fortnight, or nil if the service is booked out.
+    func nextOpening(for service: Service, stylistId: String? = nil) -> (day: Date, slot: Slot)? {
+        let calendar = Calendar.current
+        let now = Date()
+        for offset in 0..<14 {
+            guard let day = calendar.date(byAdding: .day, value: offset, to: now) else { continue }
+            for slot in slots(on: day, service: service, stylistId: stylistId) where slot.isFree {
+                return (day, slot)
+            }
+        }
+        return nil
+    }
+
+    // MARK: The guest's own appointments
+
+    private func isHeld(dayKey: String, run: Range<Int>, stylistId: String) -> Bool {
+        appointments.contains { held in
+            guard Datebook.dayKey(held.day) == dayKey, held.stylistId == stylistId else { return false }
+            guard let service = held.service else { return false }
+            return (held.minutes..<(held.minutes + service.minutes)).overlaps(run)
+        }
+    }
+
+    func book(service: Service, stylistId: String, day: Date, minutes: Int) {
+        appointments.append(Appointment(serviceId: service.id, stylistId: stylistId,
+                                        day: day, minutes: minutes))
+        persist()
+    }
+
+    func cancel(_ appointment: Appointment) {
+        appointments.removeAll { $0.id == appointment.id }
+        persist()
+    }
+
+    var upcoming: [Appointment] {
+        appointments.filter { $0.start >= Calendar.current.startOfDay(for: Date()) }
+            .sorted { $0.start < $1.start }
+    }
+
+    var past: [Appointment] {
+        appointments.filter { $0.start < Calendar.current.startOfDay(for: Date()) }
+            .sorted { $0.start > $1.start }
+    }
+
+    private func persist() {
+        if let raw = try? JSONEncoder().encode(appointments) {
+            UserDefaults.standard.set(raw, forKey: storageKey)
+        }
+    }
+}
+
+/// Open, closing soon, or shut — worked out from the studio's own hours rather than typed
+/// onto a screen, so the two closed days can never disagree with the table.
+enum DoorState {
+    case open(until: Int)
+    case closingSoon(until: Int)
+    case shut(reopensDay: String?, reopensAt: Int?)
+
+    static func now(_ moment: Date = Date()) -> DoorState {
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: moment)
+        let minutes = calendar.component(.hour, from: moment) * 60
+            + calendar.component(.minute, from: moment)
+        let today = Studio.hours(for: weekday)
+
+        if let opens = today.opensAt, let closes = today.closesAt,
+           minutes >= opens, minutes < closes {
+            return closes - minutes <= 60 ? .closingSoon(until: closes) : .open(until: closes)
+        }
+
+        // Walk forward to the next day the door opens. With Sunday and Monday both shut
+        // that can be two days away, so the loop has to keep going rather than assume
+        // tomorrow.
+        for offset in 0..<8 {
+            let day = (weekday - 1 + offset) % 7 + 1
+            let hours = Studio.hours(for: day)
+            guard let opens = hours.opensAt else { continue }
+            if offset == 0 {
+                if minutes < opens { return .shut(reopensDay: nil, reopensAt: opens) }
+                continue
+            }
+            let label = offset == 1 ? "tomorrow" : Studio.weekdayNames[day]
+            return .shut(reopensDay: label, reopensAt: opens)
+        }
+        return .shut(reopensDay: nil, reopensAt: nil)
+    }
+
+    var isOpen: Bool {
+        if case .shut = self { return false }
+        return true
+    }
+
+    var label: String {
+        switch self {
+        case .open(let until): return "OPEN UNTIL \(Studio.clock(until).uppercased())"
+        case .closingSoon(let until): return "CLOSING AT \(Studio.clock(until).uppercased())"
+        case .shut(let day, let at):
+            guard let at else { return "CLOSED" }
+            guard let day else { return "CLOSED · OPENS \(Studio.clock(at).uppercased())" }
+            return "CLOSED · OPENS \(day.uppercased()) \(Studio.clock(at).uppercased())"
+        }
+    }
+}
+
+/// Short date stamps, in one place so every screen writes a date the same way.
+enum Stamp {
+    static func day(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE d MMM"
+        return formatter.string(from: date)
+    }
+
+    static func weekday(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE"
+        return formatter.string(from: date)
+    }
+
+    static func dayNumber(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d"
+        return formatter.string(from: date)
+    }
+
+    /// "Today at 2 PM" / "Tomorrow at 9 AM" / "Thursday at 10:30 AM".
+    static func opening(_ day: Date, _ minutes: Int) -> String {
+        let calendar = Calendar.current
+        let time = Studio.clock(minutes)
+        if calendar.isDateInToday(day) { return "Today at \(time)" }
+        if calendar.isDateInTomorrow(day) { return "Tomorrow at \(time)" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        return "\(formatter.string(from: day)) at \(time)"
+    }
+}

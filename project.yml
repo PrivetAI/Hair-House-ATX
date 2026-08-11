@@ -1,0 +1,42 @@
+name: Hair House ATX
+
+options:
+  bundleIdPrefix: com.hairhouseatx
+  deploymentTarget:
+    iOS: "15.6"
+  createIntermediateGroups: true
+  groupSortPosition: none
+
+settings:
+  base:
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "iPhone Developer"
+    SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+    SUPPORTS_MACCATALYST: NO
+    SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+    SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+    TARGETED_DEVICE_FAMILY: "1"
+    IPHONEOS_DEPLOYMENT_TARGET: "15.6"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+
+targets:
+  Hair House ATX:
+    type: application
+    platform: iOS
+    sources:
+      - path: "Hair House ATX"
+    settings:
+      base:
+        PRODUCT_NAME: "Hair House ATX"
+        PRODUCT_BUNDLE_IDENTIFIER: com.hairhouseatx.app
+        # Repeated at target level on purpose: xcodegen writes its own "1,2" default into
+        # the target, which would otherwise win over the project-wide setting.
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleDisplayName: "Hair House ATX"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIStatusBarStyle: UIStatusBarStyleDarkContent
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
