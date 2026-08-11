@@ -18,6 +18,7 @@ struct BookSheet: View {
     @State private var day: Date
     @State private var stylistId: String?
     @State private var confirmed: Slot?
+    @State private var settled = false
 
     init(service: Service) {
         self.service = service
@@ -44,6 +45,19 @@ struct BookSheet: View {
                 if confirmed == nil { picker } else { receipt }
             }
         }
+        .onAppear(perform: settleOpeningDay)
+    }
+
+    /// The first day the door is open can still be a day with nothing left on it — today
+    /// after four o'clock usually is. Landing there turns "Book This Time" into a column of
+    /// struck-through rows, so if the opening day has nothing free, start on the day the
+    /// soonest opening is genuinely on. Runs once: after that the day is the guest's to pick.
+    private func settleOpeningDay() {
+        guard !settled else { return }
+        settled = true
+        guard datebook.freeCount(on: day, service: service, stylistId: stylistId) == 0,
+              let opening = datebook.nextOpening(for: service, stylistId: stylistId) else { return }
+        day = Calendar.current.startOfDay(for: opening.day)
     }
 
     private var bar: some View {
