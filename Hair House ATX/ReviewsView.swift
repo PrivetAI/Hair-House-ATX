@@ -243,6 +243,9 @@ struct RateSheet: View {
 
     @State private var stars: Int
     @State private var note: String
+    /// Focus is driven rather than left to the field: a bare tap on a TextField wrapped in a
+    /// padded, clipped box does not put the caret in it, and the note then looks broken.
+    @FocusState private var writingNote: Bool
 
     /// A note somebody writes for themselves is a line, not an essay, and the row it ends up
     /// on is one card wide.
@@ -360,6 +363,8 @@ struct RateSheet: View {
         VStack(alignment: .leading, spacing: 8) {
             Kicker(text: "A note, if you want one")
             TextField("Shorter is fine", text: $note)
+                .focused($writingNote)
+                .submitLabel(.done)
                 .font(Tone.copy(15))
                 .foregroundColor(Tone.letter)
                 .accentColor(Tone.accent)
@@ -370,6 +375,9 @@ struct RateSheet: View {
                         .stroke(Tone.rule, lineWidth: Span.rule)
                 )
                 .clipShape(RoundedRectangle(cornerRadius: Span.corner))
+                // The whole padded box, not just the line of text, puts the caret in.
+                .contentShape(Rectangle())
+                .onTapGesture { writingNote = true }
                 .onChange(of: note) { latest in
                     if latest.count > noteLimit { note = String(latest.prefix(noteLimit)) }
                 }
