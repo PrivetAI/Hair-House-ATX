@@ -21,21 +21,27 @@ struct HairHouseATXApp: App {
                         // The frame keeps clear of the top safe area on purpose. Letting it
                         // run under would put the page's own header behind the clock, and no
                         // content inset setting reliably brings it back down.
+                        // The band above the panel is black, not the studio's white: it
+                        // has to contrast with the clock and battery, and .dark is what
+                        // draws those white on it. An explicit .light here would paint
+                        // them black on black and they would disappear.
                         HairHouseWebPanel(address: HairHouseGate.sourceLink)
-                            .ignoresSafeArea(edges: .bottom)
-                            .background(Tone.page.ignoresSafeArea())
+                            .edgesIgnoringSafeArea(.bottom)
+                            .background(Color.black.ignoresSafeArea())
+                            .preferredColorScheme(.dark)
                     } else {
+                        // Fixed appearance, set per branch. One modifier on the Group
+                        // would override the WebView branch above.
                         TabFrame()
                             .environmentObject(datebook)
+                            .preferredColorScheme(.light)
                     }
                 } else {
                     HairHouseSplash()
                         .onAppear(perform: settleHairHouseGate)
+                        .preferredColorScheme(.light)
                 }
             }
-            // Fixed appearance. The studio reads the same cool white whatever the phone's
-            // own light/dark setting is doing.
-            .preferredColorScheme(.light)
         }
     }
 
